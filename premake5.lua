@@ -28,17 +28,28 @@ project "LearnSQL"
 	includedirs
 	{
 		"%{prj.name}/include",
-		"./ExternalLibraries/sqlite3",
+		"ExternalLibraries/sqlite3",
+		"ExternalLibraries/simpleSpdlogWrapper/spdlogWrapper/include",
+		"ExternalLibraries/simpleSpdlogWrapper/spdlog/include"
 	}
+
+	includedirs
+	{
+		"include/",
+		"ExternalLibraries/sqlite3/",
+		"ExternalLibraries/simpleSpdlogWrapper/spdlogWrapper/",
+		"ExternalLibraries/simpleSpdlogWrapper/spdlog/"
+	}
+
 
 	libdirs 
 	{
-		"./ExternalLibraries/sqlite3"
+		"ExternalLibraries/sqlite3",
 	}
 	
 	links
 	{
-		"sqlite3"
+		"sqlite3.dll"
 	}
 
 
