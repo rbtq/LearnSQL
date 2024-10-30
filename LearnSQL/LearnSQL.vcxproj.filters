@@ -18,6 +18,7 @@
     <ClInclude Include="include\sqlIncludes.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\simpleSQLServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">

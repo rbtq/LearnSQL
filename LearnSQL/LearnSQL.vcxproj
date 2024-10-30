@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="include\error.h" />
     <ClInclude Include="include\simpleLoggerInstance.h" />
+    <ClInclude Include="include\simpleSQLServer.h" />
     <ClInclude Include="include\sqlIncludes.h" />
   </ItemGroup>
   <ItemGroup>
