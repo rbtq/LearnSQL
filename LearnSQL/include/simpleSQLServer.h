@@ -21,6 +21,10 @@ namespace ssqls {
 
 				if (SQL_SUCCESS != SQLSetConnectAttr(m_sqlConnectionHandle,SQL_LOGIN_TIMEOUT,(SQLPOINTER)5,0)) break;
 
+				SQLWCHAR retConString[1024];
+
+				SQLDriverConnect(m_sqlConnectionHandle,NULL, (SQLWCHAR*)"DRIVER={SQL Server}", SQL_NTS, retConString, 1024, NULL, SQL_DRIVER_NOPROMPT);
+
 			} while (successfulSetup);
 		
 		};
