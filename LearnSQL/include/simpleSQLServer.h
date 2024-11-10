@@ -1,5 +1,7 @@
 #pragma once
 #include "sqlIncludes.h"
+#include "simpleLoggerInstance.h"
+
 namespace ssqls {
 	class SimpleSQLServer {
 	private:
@@ -12,6 +14,7 @@ namespace ssqls {
 	public:
 		SimpleSQLServer() { //!<constructor
 			bool successfulSetup = false;
+			//setup the server
 			do {
 				if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &m_sqlEnvHandle)) break;
 
@@ -23,10 +26,43 @@ namespace ssqls {
 
 				SQLWCHAR retConString[1024];
 
-				SQLDriverConnect(m_sqlConnectionHandle,NULL, (SQLWCHAR*)"DRIVER={SQL Server}", SQL_NTS, retConString, 1024, NULL, SQL_DRIVER_NOPROMPT);
+				switch (SQLDriverConnect(m_sqlConnectionHandle, NULL,
+					(SQLWCHAR*)"DRIVER={SQL Server}; SERVER=localhost, 1433; DATABASE=myDB; UID =myID; PWD=myPWD",
+					SQL_NTS, retConString, 1024, NULL, SQL_DRIVER_NOPROMPT)) {
+
+					case SQL_SUCCESS_WITH_INFO:
+					case SQL_SUCCESS: {
+						break;
+					}
+					case SQL_ERROR:
+					case SQL_INVALID_HANDLE:
+					case SQL_NO_DATA_FOUND: {
+						showSQLError(SQL_HANDLE_DBC, m_sqlConnectionHandle);
+						m_sqlReturnCode = -1;
+						break;
+					}
+					default: {
+						break;
+					}
+
+				}
+
+				if (m_sqlReturnCode == -1) break;
+
+				if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_STMT, m_sqlConnectionHandle, &m_sqlStatementHandle)) break;
+
+				//SQLExecDirect(m_sqlConnectionHandle,(SQLWCHAR*),SQL_NTS);
 
 			} while (successfulSetup);
 		
 		};
+
+		void showSQLError(unsigned int handleType, const SQLHANDLE& handle) { //!<prints the error
+			SQLWCHAR sqlState[1024];
+			SQLWCHAR message[1024];
+			if (SQL_SUCCESS == SQLGetDiagRec(handleType, handle, 1, sqlState, NULL, message, 1024, NULL)) {
+				s_logger.info("SQL Driver Message: {0} \nSQL State: {1}.", message, sqlState);
+			}
+		}
 	};
 }
